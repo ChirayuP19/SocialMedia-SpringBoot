@@ -8,8 +8,13 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: update
-
+      ddl-auto: validate
 server:
   port: 8081
+springdoc:
+  api-docs:
+    path: /api-docs
 
+jwt:
+  secret: F{jBgE}Zcvg/6_^VSL[7d1i1tYH8a21XA%uifsOTk}^
+  expiration-ms: 3600000

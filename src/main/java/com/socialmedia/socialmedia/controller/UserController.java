@@ -6,6 +6,7 @@ import com.socialmedia.socialmedia.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,7 +19,7 @@ public class UserController {
 
 
     @PostMapping("")
-    public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserRequestDTO userRequestDTO) {
+    public ResponseEntity<UserResponseDTO> createUser(@RequestBody @Validated UserRequestDTO userRequestDTO) {
         UserResponseDTO userResponseDTO = userService.createUser(userRequestDTO);
         log.info("User created with name: {} and age: {}", userResponseDTO.getName(), userResponseDTO.getAge());
         return ResponseEntity.ok(userResponseDTO);
