@@ -10,6 +10,9 @@ import com.socialmedia.socialmedia.repository.UserRepository;
 import com.socialmedia.socialmedia.service.PostsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,6 +30,17 @@ public class PostsServiceImpl implements PostsService {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
         log.info("User found with id: {} and name: {}", user.getId(), user.getName());
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        assert authentication != null;
+        User jwtUser = (User) authentication.getPrincipal();
+        assert jwtUser != null;
+        if (!user.getId().equals(jwtUser.getId()) && !jwtUser.getRole().equals("ADMIN")) {
+            log.warn("User with id: {} is trying to create a post for " +
+                    "user with id: {} without permission", jwtUser.getId(), user.getId());
+            throw new AccessDeniedException("User with id: " + jwtUser.getId()
+                    + " is trying to create a post for "
+                    + "user with id: " + user.getId() + " without permission");
+        }
         log.info("Creating post with title: {} and content: {}", postRequestDTO.getTitle(), postRequestDTO.getContent());
         Posts posts = modelMapper.requestDTOToPosts(postRequestDTO);
         posts.setUser(user);

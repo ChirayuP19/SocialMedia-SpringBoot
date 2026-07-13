@@ -18,3 +18,4 @@ springdoc:
 jwt:
   secret: F{jBgE}Zcvg/6_^VSL[7d1i1tYH8a21XA%uifsOTk}^
   expiration-ms: 3600000
+  refresh-expiration: 604800000
